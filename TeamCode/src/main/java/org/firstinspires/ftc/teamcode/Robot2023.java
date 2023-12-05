@@ -112,12 +112,11 @@ public class Robot2023 extends Robot {
         dashboardTelemetry.addData("left_x", gamepad1.left_stick_x);
         dashboardTelemetry.addData("right trigger", gamepad1.right_trigger);
         dashboardTelemetry.addData("left trigger", gamepad1.left_trigger );
-        telemetry.addData("grab angles", grab.getPosition());
-     //   telemetry.addData("salomet angles", samolet.getPosition());
-        telemetry.addData("pomidor lfit: ", lift.getPosition());
-        telemetry.addData("korobouchkya", grab.getPosition());
-        telemetry.addData("ticks up", UP.getCurrentPosition());
-        telemetry.addData("ticks lf", LF.getCurrentPosition());
+        //dashboardTelemetry.addData("salomet pos", samolet.getPosition());
+        dashboardTelemetry.addData("lift pos", lift.getPosition());
+        dashboardTelemetry.addData("rab pos", grab.getPosition());
+        dashboardTelemetry.addData("ticks up", UP.getCurrentPosition());
+        dashboardTelemetry.addData("ticks lf", LF.getCurrentPosition());
         dashboardTelemetry.update();
     }
 
@@ -155,13 +154,12 @@ public class Robot2023 extends Robot {
 
         telemetry.addData("left_y: ",gamepad1.left_stick_y);
         telemetry.addData("left_x: ",gamepad1.left_stick_x);
-        telemetry.addData("right trigger: ", gamepad1.right_trigger);
-        telemetry.addData("left trigger: ", gamepad1.left_trigger );
-        telemetry.addData("encoder", startTick);
+       // telemetry.addData("right trigger: ", gamepad1.right_trigger);
+       // telemetry.addData("left trigger: ", gamepad1.left_trigger );
+       // telemetry.addData("encoder", startTick);
        // telemetry.addData("getAngle: ", getAngle());
         telemetry.addData("grab angles", grab.getPosition());
        // telemetry.addData("salomet angles", samolet.getPosition());
-        telemetry.addData("ticks", UP.getCurrentPosition());
         telemetry.addData("LF power", LF.getPower());
         telemetry.update();
     }
