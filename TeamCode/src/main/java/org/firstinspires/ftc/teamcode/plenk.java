@@ -19,9 +19,12 @@ public class plenk extends LinearOpMode {
 
         waitForStart();
 
-        R.grab.setPosition(close);
-        R.setLift(-500);
-        R.delay(1000);
+        R.go(20);
+        R.rotate(90);
+        R.go(10);
+        R.servoOpen();
+        R.go(-10);
+
 
     }
 }

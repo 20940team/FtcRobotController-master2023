@@ -131,7 +131,7 @@ public class Robot2023 extends Robot {
 
         UP.setPower(((gamepad2.right_stick_y)*(gamepad2.right_stick_y)*Math.signum(gamepad2.right_stick_y)));
         // if (startTick < UP.getCurrentPosition()) {
-           // UP.setPower(-0.1);}
+        // UP.setPower(-0.1);}
 
         if (gamepad2.b) {
             arm(-0.1, 100);
@@ -147,7 +147,7 @@ public class Robot2023 extends Robot {
         } else if (gamepad2.dpad_down) {
             lift.setPosition(0.25);} */
 
-       if (gamepad2.dpad_up) {
+        if (gamepad2.dpad_up) {
             lift.setPosition(lopen);
             lift2.setPosition(lclose);
         } else if (gamepad2.dpad_down) {
@@ -157,12 +157,12 @@ public class Robot2023 extends Robot {
 
         telemetry.addData("left_y: ",gamepad1.left_stick_y);
         telemetry.addData("left_x: ",gamepad1.left_stick_x);
-       // telemetry.addData("right trigger: ", gamepad1.right_trigger);
-       // telemetry.addData("left trigger: ", gamepad1.left_trigger );
-       // telemetry.addData("encoder", startTick);
-       // telemetry.addData("getAngle: ", getAngle());
+        // telemetry.addData("right trigger: ", gamepad1.right_trigger);
+        // telemetry.addData("left trigger: ", gamepad1.left_trigger );
+        // telemetry.addData("encoder", startTick);
+        // telemetry.addData("getAngle: ", getAngle());
         telemetry.addData("grab angles", grab.getPosition());
-       // telemetry.addData("salomet angles", samolet.getPosition());
+        // telemetry.addData("salomet angles", samolet.getPosition());
         telemetry.addData("LF power", LF.getPower());
         telemetry.update();
     }
@@ -183,7 +183,7 @@ public class Robot2023 extends Robot {
         AR.setPower(0);
     }
 
-   public void goTimer(double x, double y, double time) {
+    public void goTimer(double x, double y, double time) {
         LF.setPower(y - x);
         LB.setPower(y + x);
         RF.setPower(y + x);
@@ -242,10 +242,10 @@ public class Robot2023 extends Robot {
         while (Math.abs(ERROR)>3 && linearOpMode.opModeIsActive()) {
             ERROR  = degrees - getAngle();
 
-           double kp = 0.4;
+            double kp = 0.4;
             double P = kp * ERROR / Er0 * pw; // P = -0.4
 
-           double kd = 0.2;
+            double kd = 0.2;
             double ErD = ERROR - ErLast;
             //double D = kd * ErD * (1/ERROR);
 

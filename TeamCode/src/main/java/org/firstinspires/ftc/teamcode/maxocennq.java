@@ -7,18 +7,20 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
 
-@Autonomous(name="333666999", group="")
+@Autonomous(name="yesyotestcamera777", group="")
 public class maxocennq extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Robot2023 R = new Robot2023(hardwareMap, telemetry, this);
         R.init();
 
-        DetectionPipelne pipeLine = new DetectionPipelne();
+        DetectionPipeLine pipeLine = new DetectionPipeLine();
         pipeLine.targetColor = "RED";
         pipeLine.initFixed(telemetry);
         R.webcam.setPipeline(pipeLine);
+
         R.webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {

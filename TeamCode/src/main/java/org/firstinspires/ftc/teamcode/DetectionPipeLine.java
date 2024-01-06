@@ -11,7 +11,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-public class DetectionPipelne extends OpenCvPipeline {
+public class DetectionPipeLine extends OpenCvPipeline {
 
     Telemetry telemetry;
 
