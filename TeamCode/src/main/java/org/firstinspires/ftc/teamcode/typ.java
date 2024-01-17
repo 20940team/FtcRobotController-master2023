@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp1")
-
-public class TeleOp extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "typ")
+public class typ extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Robot2023 R = new Robot2023(hardwareMap, telemetry,this);
@@ -13,9 +13,7 @@ public class TeleOp extends LinearOpMode {
         R.gamepadInit(gamepad1, gamepad2);
         waitForStart();
         while (!isStopRequested()){
-            R.driveOmni();
-            R.teleOp();
-            //R.initLift();
+            R.testpomidor();
             R.telemetry();
         }
         telemetry.addData("Stop", "program");

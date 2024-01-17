@@ -32,14 +32,18 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Config
 public class Robot2023 extends Robot {
 
-    DcMotor RF, LF, LB, RB, UP, AL, AR;
-    Servo grab, lift, lift2;
+    DcMotor RF, LF, LB , AA, RB, UP1, UP2;
+    Servo grab, lift, lift2, samolet;
     BNO055IMU imu;
 
     public static double open = 0.2;
     public static double close = 0.7;
     public static double lopen = 0;
     public static double lclose = 1;
+    public static double addservolift = 0.85;
+    public static double dregee = 0;
+
+    public static double kr = 0.05;
 
     Robot2023(HardwareMap hardwareMap, Telemetry telemetry, LinearOpMode linearOpMode) {
         super(hardwareMap, telemetry, linearOpMode);
@@ -47,13 +51,13 @@ public class Robot2023 extends Robot {
         LB = hardwareMap.get(DcMotor.class, "LB");
         RF = hardwareMap.get(DcMotor.class, "RF");
         RB = hardwareMap.get(DcMotor.class, "RB");
-        UP = hardwareMap.get(DcMotor.class, "UP");
-        AL = hardwareMap.get(DcMotor.class, "AL");
-        AR = hardwareMap.get(DcMotor.class, "AR");
+        UP1 = hardwareMap.get(DcMotor.class, "UP1");
+        UP2 = hardwareMap.get(DcMotor.class, "UP2");
+        AA = hardwareMap.get(DcMotor.class, "AA");
         grab = hardwareMap.get(Servo.class, "grab");
         lift2 = hardwareMap.get(Servo.class, "lift2");
         lift = hardwareMap.get(Servo.class, "lift");
-        //samolet = hardwareMap.get(Servo.class, "samolet");
+        samolet = hardwareMap.get(Servo.class, "samolet");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters(); //Акселерометр
         parameters.angleUnit           = DEGREES;
@@ -91,6 +95,11 @@ public class Robot2023 extends Robot {
         RB.setPower(rb);
     }
 
+    long map(long x, long in_min, long in_max, long out_min, long out_max)
+    {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
     public void drive() {
         double lf = (gamepad1.left_stick_y + gamepad1.right_trigger*0.5 - gamepad1.left_trigger*0.5);
         double lb = (gamepad1.left_stick_y + gamepad1.right_trigger*0.5 - gamepad1.left_trigger*0.5);
@@ -113,74 +122,83 @@ public class Robot2023 extends Robot {
         dashboardTelemetry.addData("left_x", gamepad1.left_stick_x);
         dashboardTelemetry.addData("right trigger", gamepad1.right_trigger);
         dashboardTelemetry.addData("left trigger", gamepad1.left_trigger );
-        //dashboardTelemetry.addData("salomet pos", samolet.getPosition());
-        dashboardTelemetry.addData("lift pos", lift.getPosition());
-        dashboardTelemetry.addData("rab pos", grab.getPosition());
-        dashboardTelemetry.addData("ticks up", UP.getCurrentPosition());
+        dashboardTelemetry.addData("salomet", samolet.getPosition());
+        dashboardTelemetry.addData("lift position", lift.getPosition());
+        dashboardTelemetry.addData("box position", grab.getPosition());
+        dashboardTelemetry.addData("power up1+", UP1.getPower());
+        dashboardTelemetry.addData("power up2-", UP2.getPower());
         dashboardTelemetry.addData("ticks lf", LF.getCurrentPosition());
+        dashboardTelemetry.addData("power LF", LF.getPower());
+        dashboardTelemetry.addData("power LB", LB.getPower());
+        dashboardTelemetry.addData("power RF", RF.getPower());
+        dashboardTelemetry.addData("power RB", RB.getPower());
+        dashboardTelemetry.addData("angle", getAngle());
         dashboardTelemetry.update();
     }
 
     public void init() {
         RF.setDirection(DcMotorSimple.Direction.REVERSE);
         RB.setDirection(DcMotorSimple.Direction.REVERSE);
+        initCamera();
     }
 
 
     public void teleOp() {
 
-        UP.setPower(((gamepad2.right_stick_y)*(gamepad2.right_stick_y)*Math.signum(gamepad2.right_stick_y)));
+        UP1.setPower(((gamepad2.right_stick_y)*(gamepad2.right_stick_y)*Math.signum(gamepad2.right_stick_y)));
+        UP2.setPower(-((gamepad2.right_stick_y)*(gamepad2.right_stick_y)*Math.signum(gamepad2.right_stick_y)));
         // if (startTick < UP.getCurrentPosition()) {
         // UP.setPower(-0.1);}
 
-        if (gamepad2.b) {
-            arm(-0.1, 100);
-        }
+
+
+        while (gamepad2.y) AA.setPower(1);
+        AA.setPower(0);
+
 
         if (gamepad2.x) {
             grab.setPosition(close);
         } else if (gamepad2.a) {
             grab.setPosition(open);}
 
-        /* if (gamepad2.dpad_up) {
-            lift.setPosition(1);
-        } else if (gamepad2.dpad_down) {
-            lift.setPosition(0.25);} */
+        if (gamepad2.dpad_left) {
+            samolet.setPosition(1);
+        } else if (gamepad2.dpad_right) {
+            samolet.setPosition(0);}
 
         if (gamepad2.dpad_up) {
             lift.setPosition(lopen);
-            lift2.setPosition(lclose);
+            lift2.setPosition(1-lopen);
         } else if (gamepad2.dpad_down) {
             lift.setPosition(lclose);
-            lift2.setPosition(lopen);
+            lift2.setPosition(1-lclose);
+        } else if (gamepad2.b) {
+            lift.setPosition(addservolift);
+            lift2.setPosition(addservolift);
         }
 
-        telemetry.addData("left_y: ",gamepad1.left_stick_y);
-        telemetry.addData("left_x: ",gamepad1.left_stick_x);
-        // telemetry.addData("right trigger: ", gamepad1.right_trigger);
-        // telemetry.addData("left trigger: ", gamepad1.left_trigger );
+        telemetry.addData("right trigger: ", gamepad1.right_trigger);
+        telemetry.addData("left trigger: ", gamepad1.left_trigger );
         // telemetry.addData("encoder", startTick);
-        // telemetry.addData("getAngle: ", getAngle());
+        telemetry.addData("getAngle: ", getAngle());
         telemetry.addData("grab angles", grab.getPosition());
-        // telemetry.addData("salomet angles", samolet.getPosition());
-        telemetry.addData("LF power", LF.getPower());
         telemetry.update();
     }
 
 
 
     public void arm(double x, double time) {
-        UP.setPower(x);
+        UP1.setPower(x);
+        UP2.setPower(-x);
         delay(time);
-        UP.setPower(-0.45);
+        UP1.setPower(-0);
+        UP2.setPower(0);
     }
-    public void zaxvat() {
-        while (gamepad2.y) {
-            AL.setPower(1);
-            AR.setPower(1);
-        }
-        AL.setPower(0);
-        AR.setPower(0);
+
+    public void azaxvat(double time, double direction) {
+        AA.setPower(1*Math.signum(direction));
+        delay(time);
+        AA.setPower(0);
     }
 
     public void goTimer(double x, double y, double time) {
@@ -229,6 +247,49 @@ public class Robot2023 extends Robot {
         grab.setPosition(open);
     }
 
+
+    public void testpomidor() {
+        double error = 2;
+
+        double kp = 0.085;
+        while (error>0.1 && linearOpMode.opModeIsActive()) {
+            error = -getAngle();
+            double p = kp * error;
+            double rele = kr * Math.signum(error);
+            double pwf = p + rele;
+            setMtPower(pwf, pwf, -pwf, -pwf);
+        }
+    }
+    public void gotocoord(double xpos, double ypos) {
+        LF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double ccx = (1450 * xpos) / (9.5 * Math.PI);
+        double ccy = (1450 * ypos) / (9.5 * Math.PI);
+        double degrees = 0;
+        double error = 1;
+        double erx = 1;
+        double ery = 1;
+        double xkr = 0.1;
+        double ykr = 0.15;
+
+        double kp = 0.085;
+        while (error > 0.9 && linearOpMode.opModeIsActive()) {
+            error = degrees -getAngle();
+            erx = Math.abs(ccx) - Math.abs(LF.getCurrentPosition());
+            ery = Math.abs(ccy) - Math.abs(RF.getCurrentPosition());
+            double p = kp * error;
+            double rele = kr * Math.signum(error);
+            double x = Math.signum(erx) + xkr * erx;
+            double y = Math.signum(ery) + ykr * ery;
+            double r = p + rele;
+            setMtPower(x+r, x-r, y+r, y-r);
+        }
+        setMtZero();
+    }
+
+
     public void rotate(double degrees) {
 
         double ERROR = 4;
@@ -238,11 +299,10 @@ public class Robot2023 extends Robot {
         double kr = 0.3;
         double ErLast = 0;
 
-
         while (Math.abs(ERROR)>3 && linearOpMode.opModeIsActive()) {
             ERROR  = degrees - getAngle();
 
-            double kp = 0.4;
+            double kp = 0.6;
             double P = kp * ERROR / Er0 * pw; // P = -0.4
 
             double kd = 0.2;
@@ -252,7 +312,6 @@ public class Robot2023 extends Robot {
             //  if (Math.signum(D) > Math.signum(P)) {  D=P; }
 
             double RELE = kr * Math.signum(ERROR);
-            if (RELE > 0.1) {P -= P;}
             ErLast = ERROR;
 
             double pwf = RELE + P;
@@ -279,15 +338,27 @@ public class Robot2023 extends Robot {
 
     public  void go(double cm) { //
         double pw = 1;
+        double degrees = 0;
+        double err = 0;
         double cc = (1450 * cm) / (9.5 * Math.PI);
         double Er0 = cc;
+        double Erd = -degrees;
+        double kg = 0.15;
         double errorFix=0;
         double ErLast = 0;
         double ErLast2 = 0;
         LF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        err = -getAngle();
+        double p = kg * err / Erd * pw;
+        double rele = kr * Math.signum(err);
+        double dr = p + rele;
 
         /*if (degrees < -180) {
             degrees += 360;
@@ -339,10 +410,10 @@ public class Robot2023 extends Robot {
             //telemetry.addData("D", D);
             //telemetry.update();
 
-            LF.setPower(-pwf);
-            RB.setPower(-pwf);
-            RF.setPower(-pwf2);
-            LB.setPower(-pwf2);
+            LF.setPower(-pwf+dr);
+            RB.setPower(-pwf+dr);
+            RF.setPower(-pwf2+dr);
+            LB.setPower(-pwf2+dr);
 
 
             /*telemetry.addData("cc", cc);
@@ -360,56 +431,15 @@ public class Robot2023 extends Robot {
 
         LF.setPower(0);
         RB.setPower(0);
+        LB.setPower(0);
+        RF.setPower(0);
 
         delay(500);
     }
 
     public void liftOff() {
-        UP.setPower(0);
-    }
-
-    public void setLift(double ticks) {
-        UP.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        UP.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double ErLast = 0;
-        double rI = 0;
-        //double dt = 0;
-        while ( Math.abs(ticks - UP.getCurrentPosition()) > 5 && linearOpMode.opModeIsActive() ) {
-            //dt += 1;
-            double Er = ticks - UP.getCurrentPosition();
-
-            double kp = 0.005; //15
-            double P = kp * Er;
-
-            double ki = 0.00003;
-            rI = rI + Er;
-            double I = rI * ki;
-
-            double kd = 0.0003; //2
-            double ErD = Er - ErLast;
-            double D = kd * ErD;
-
-            double pwf = P + I + D;
-
-            ErLast = Er;
-
-            telemetry.addData("UP", UP.getCurrentPosition());
-            telemetry.addData("Err", Er);
-            telemetry.addData("P", P);
-            telemetry.addData("rI", rI);
-            telemetry.addData("I", I);
-            telemetry.addData("ErD", ErD);
-            telemetry.addData("D", D);
-            telemetry.addData("pwf", pwf);
-            telemetry.update();
-
-            UP.setPower(pwf);
-
-            delay(50);
-        }
-        telemetry.addData("Work ended in", UP.getCurrentPosition());
-        UP.setPower(0);
-        delay(50);
+        UP1.setPower(0);
+        UP2.setPower(0);
     }
 
     OpenCvWebcam webcam;

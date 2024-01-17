@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.concurrent.Delayed;
-//@Disabled
+@Disabled
 @Autonomous(name="тест", group="")
 public class autotest extends LinearOpMode {
 

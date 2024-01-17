@@ -32,12 +32,12 @@ public class DetectionPipeLine extends OpenCvPipeline {
     public int POINT_3_X_1 = 430;
     public int POINT_3_Y_1 = 10;
     public int POINT_3_X_2 = 640;
-    public int POINT_3_Y_2 = 470;
+    public int POINT_3_Y_2 = 430; //470
 
     public String targetColor = "BLUE";
     int targetChannelId = 2;
 
-    public resultPosition result = resultPosition.CENTER;
+    public resultPosition result = resultPosition.RIGHT;
 
     public void initFixed(Telemetry telemetry_) {
         telemetry = telemetry_;
@@ -98,7 +98,7 @@ public class DetectionPipeLine extends OpenCvPipeline {
             result = resultPosition.LEFT;
         }else if (max == avg2) {
             result = resultPosition.CENTER;
-        }else{
+        }else {
             result = resultPosition.RIGHT;
         }
 

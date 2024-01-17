@@ -4,12 +4,12 @@ import static org.firstinspires.ftc.teamcode.Robot2023.close;
 import static org.firstinspires.ftc.teamcode.Robot2023.open;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.concurrent.Delayed;
-
-@Autonomous(name="единственый рабочий дима жмакай сюда!!!!", group="")
+@Autonomous(name="at", group="")
 public class xxy extends LinearOpMode {
 
     @Override
@@ -19,7 +19,7 @@ public class xxy extends LinearOpMode {
 
         waitForStart();
 
-        R.go(10);
+        R.go(20);
 
     }
 }

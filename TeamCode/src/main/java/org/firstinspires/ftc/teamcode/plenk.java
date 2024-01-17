@@ -3,13 +3,15 @@ package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.Robot2023.close;
 import static org.firstinspires.ftc.teamcode.Robot2023.open;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.concurrent.Delayed;
 
-@Autonomous(name="пиксель ну короче в клешней че то", group="")
+@Autonomous(name="dt", group="")
 public class plenk extends LinearOpMode {
 
     @Override
@@ -19,11 +21,8 @@ public class plenk extends LinearOpMode {
 
         waitForStart();
 
-        R.go(20);
+        R.go(15);
         R.rotate(90);
-        R.go(10);
-        R.servoOpen();
-        R.go(-10);
 
 
     }
