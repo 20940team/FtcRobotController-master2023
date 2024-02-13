@@ -32,8 +32,8 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Config
 public class Robot2023 extends Robot {
 
-    DcMotor RF, LF, LB , AA, RB, UP1, UP2;
-    Servo grab, lift, lift2, samolet;
+    DcMotor  RF, LF, LB, RB, AA; //
+    Servo  samolet; // инициализация имен серво и моторов UP1, UP2 lift, lift2
     BNO055IMU imu;
 
     public static double open = 0.2;
@@ -41,8 +41,7 @@ public class Robot2023 extends Robot {
     public static double lopen = 0;
     public static double lclose = 1;
     public static double addservolift = 0.85;
-    public static double dregee = 0;
-
+    public static double dregee = 0; // инициализация переменных для фтс дешборд
     public static double kr = 0.05;
 
     Robot2023(HardwareMap hardwareMap, Telemetry telemetry, LinearOpMode linearOpMode) {
@@ -51,13 +50,15 @@ public class Robot2023 extends Robot {
         LB = hardwareMap.get(DcMotor.class, "LB");
         RF = hardwareMap.get(DcMotor.class, "RF");
         RB = hardwareMap.get(DcMotor.class, "RB");
-        UP1 = hardwareMap.get(DcMotor.class, "UP1");
-        UP2 = hardwareMap.get(DcMotor.class, "UP2");
+      //  UP1 = hardwareMap.get(DcMotor.class, "UP1");
+      //  UP2 = hardwareMap.get(DcMotor.class, "UP2");
         AA = hardwareMap.get(DcMotor.class, "AA");
-        grab = hardwareMap.get(Servo.class, "grab");
-        lift2 = hardwareMap.get(Servo.class, "lift2");
-        lift = hardwareMap.get(Servo.class, "lift");
-        samolet = hardwareMap.get(Servo.class, "samolet");
+        //grab = hardwareMap.get(Servo.class, "grab");
+      //  lift2 = hardwareMap.get(Servo.class, "lift2");
+      //  lift = hardwareMap.get(Servo.class, "lift");
+      //    up1 = hardwareMap.get(Servo.class, "up1");
+      //  up2 = hardwareMap.get(Servo.class, "up2");
+        samolet = hardwareMap.get(Servo.class, "samolet"); // инициализация серво и моторов
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters(); //Акселерометр
         parameters.angleUnit           = DEGREES;
@@ -92,13 +93,13 @@ public class Robot2023 extends Robot {
         LF.setPower(lf); // - - + + left trigger right trigger
         LB.setPower(lb);
         RF.setPower(rf);
-        RB.setPower(rb);
+        RB.setPower(rb); // езда в телеопе
     }
 
     long map(long x, long in_min, long in_max, long out_min, long out_max)
     {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-    }
+    } // функция мап как в ардуине
 
     public void drive() {
         double lf = (gamepad1.left_stick_y + gamepad1.right_trigger*0.5 - gamepad1.left_trigger*0.5);
@@ -108,7 +109,7 @@ public class Robot2023 extends Robot {
         LF.setPower(lf);
         LB.setPower(lb);
         RF.setPower(rf);
-        RB.setPower(rb);
+        RB.setPower(rb); // езда в телеопе для прямых колес
 
 
     }
@@ -123,50 +124,54 @@ public class Robot2023 extends Robot {
         dashboardTelemetry.addData("right trigger", gamepad1.right_trigger);
         dashboardTelemetry.addData("left trigger", gamepad1.left_trigger );
         dashboardTelemetry.addData("salomet", samolet.getPosition());
-        dashboardTelemetry.addData("lift position", lift.getPosition());
-        dashboardTelemetry.addData("box position", grab.getPosition());
-        dashboardTelemetry.addData("power up1+", UP1.getPower());
-        dashboardTelemetry.addData("power up2-", UP2.getPower());
+       // dashboardTelemetry.addData("lift position", lift.getPosition());
+      //  dashboardTelemetry.addData("box position", grab.getPosition());
+      //  dashboardTelemetry.addData("power up1+", UP1.getPower());
+      //  dashboardTelemetry.addData("power up2-", UP2.getPower());
         dashboardTelemetry.addData("ticks lf", LF.getCurrentPosition());
-        dashboardTelemetry.addData("power LF", LF.getPower());
+       dashboardTelemetry.addData("power LF", LF.getPower());
         dashboardTelemetry.addData("power LB", LB.getPower());
         dashboardTelemetry.addData("power RF", RF.getPower());
         dashboardTelemetry.addData("power RB", RB.getPower());
         dashboardTelemetry.addData("angle", getAngle());
-        dashboardTelemetry.update();
+        dashboardTelemetry.update(); // телеметрия
     }
 
     public void init() {
         RF.setDirection(DcMotorSimple.Direction.REVERSE);
         RB.setDirection(DcMotorSimple.Direction.REVERSE);
-        initCamera();
+        initCamera(); //инициализация
+        samolet.setPosition(0.34);
     }
 
 
-    public void teleOp() {
+    public void teleOp() { // телеоп
 
-        UP1.setPower(((gamepad2.right_stick_y)*(gamepad2.right_stick_y)*Math.signum(gamepad2.right_stick_y)));
-        UP2.setPower(-((gamepad2.right_stick_y)*(gamepad2.right_stick_y)*Math.signum(gamepad2.right_stick_y)));
-        // if (startTick < UP.getCurrentPosition()) {
-        // UP.setPower(-0.1);}
-
-
-
-        while (gamepad2.y) AA.setPower(1);
-        AA.setPower(0);
+      //  UP1.setPower(((gamepad2.right_stick_y)*(gamepad2.right_stick_y)*Math.signum(gamepad2.right_stick_y)));
+      //  UP2.setPower(-((gamepad2.right_stick_y)*(gamepad2.right_stick_y)*Math.signum(gamepad2.right_stick_y)));
+         //if (startTick < UP.getCurrentPosition()) {
+         //UP.setPower(-0.1);}
 
 
-        if (gamepad2.x) {
+
+        AA.setPower((gamepad2.left_stick_y*gamepad2.left_stick_y)* Math.signum(gamepad2.left_stick_y));
+
+   /*public void liftOff() {
+        UP1.setPower(0);
+        UP2.setPower(0);
+    } */
+
+       /* (gamepad2.x) {
             grab.setPosition(close);
         } else if (gamepad2.a) {
-            grab.setPosition(open);}
+            grab.setPosition(open);} */
 
         if (gamepad2.dpad_left) {
             samolet.setPosition(1);
         } else if (gamepad2.dpad_right) {
-            samolet.setPosition(0);}
+            samolet.setPosition(0.34);}
 
-        if (gamepad2.dpad_up) {
+      /*  if (gamepad2.dpad_up) {
             lift.setPosition(lopen);
             lift2.setPosition(1-lopen);
         } else if (gamepad2.dpad_down) {
@@ -175,25 +180,32 @@ public class Robot2023 extends Robot {
         } else if (gamepad2.b) {
             lift.setPosition(addservolift);
             lift2.setPosition(addservolift);
-        }
+        } */
+    /*    if (gamepad2.dpad_up) {
+            up1.setPosition(0);
+            up2.setPosition(1);
+        } else if (gamepad2.dpad_down) {
+            up1.setPosition(1);
+            up2.setPosition(0);
+        } */
 
         telemetry.addData("right trigger: ", gamepad1.right_trigger);
         telemetry.addData("left trigger: ", gamepad1.left_trigger );
         // telemetry.addData("encoder", startTick);
         telemetry.addData("getAngle: ", getAngle());
-        telemetry.addData("grab angles", grab.getPosition());
+    //    telemetry.addData("grab angles", grab.getPosition());
         telemetry.update();
     }
 
 
 
-    public void arm(double x, double time) {
+   /* public void arm(double x, double time) {
         UP1.setPower(x);
         UP2.setPower(-x);
         delay(time);
         UP1.setPower(-0);
         UP2.setPower(0);
-    }
+    } */
 
     public void azaxvat(double time, double direction) {
         AA.setPower(1*Math.signum(direction));
@@ -201,27 +213,27 @@ public class Robot2023 extends Robot {
         AA.setPower(0);
     }
 
-    public void goTimer(double x, double y, double time) {
+   public void goTimer(double x, double y, double time) {
         LF.setPower(y - x);
         LB.setPower(y + x);
         RF.setPower(y + x);
         RB.setPower(y - x);
         delay(time);
         setMtZero();
-    }
+    } // езда по времени
 
     public void setMtPower(double lf, double lb, double rf, double rb) {
         LF.setPower(lf);
         LB.setPower(lb);
         RF.setPower(rf);
         RB.setPower(rb);
-    }
+    } // ощность на каждый мотор
 
     public void setMtZero() {
         LF.setPower(0);
         LB.setPower(0);
         RF.setPower(0);
-        RB.setPower(0);
+        RB.setPower(0); // отключение моторов
     }
     public void setMtAllDelay(double power, double time) {
         LF.setPower(power);
@@ -229,23 +241,23 @@ public class Robot2023 extends Robot {
         RF.setPower(power);
         RB.setPower(power);
         delay(time);
-        setMtZero();
+        setMtZero(); // мощность на все моторы на время
     }
 
     public void setMtAll(double power) {
         LF.setPower(power);
         LB.setPower(power);
         RF.setPower(power);
-        RB.setPower(power);
+        RB.setPower(power); // мощеость на все моторы
     }
 
-    public void servoClose() {
+  /*  public void servoClose() {
         grab.setPosition(close);
     }
 
     public void servoOpen() {
         grab.setPosition(open);
-    }
+    } */
 
 
     public void testpomidor() {
@@ -257,7 +269,7 @@ public class Robot2023 extends Robot {
             double p = kp * error;
             double rele = kr * Math.signum(error);
             double pwf = p + rele;
-            setMtPower(pwf, pwf, -pwf, -pwf);
+            setMtPower(pwf, pwf, -pwf, -pwf); // регулятор удержания угла
         }
     }
     public void gotocoord(double xpos, double ypos) {
@@ -267,57 +279,58 @@ public class Robot2023 extends Robot {
         RF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double ccx = (1450 * xpos) / (9.5 * Math.PI);
         double ccy = (1450 * ypos) / (9.5 * Math.PI);
-        double degrees = 0;
+        double degrees = 1;
         double error = 1;
         double erx = 1;
         double ery = 1;
-        double xkr = 0.1;
-        double ykr = 0.15;
+        double xkr = 0.08;
+        double ykr = 0.08;
 
-        double kp = 0.085;
-        while (error > 0.9 && linearOpMode.opModeIsActive()) {
+        double kp = 0.05;
+        while (erx > 0.9 && ery > 0.9 && linearOpMode.opModeIsActive()) {
             error = degrees -getAngle();
-            erx = Math.abs(ccx) - Math.abs(LF.getCurrentPosition());
-            ery = Math.abs(ccy) - Math.abs(RF.getCurrentPosition());
+           erx = ccx - (LF.getCurrentPosition());
+           ery = ccy - (RF.getCurrentPosition());
             double p = kp * error;
-            double rele = kr * Math.signum(error);
+            double rele = (kr+0.1) * Math.signum(error);
             double x = Math.signum(erx) + xkr * erx;
             double y = Math.signum(ery) + ykr * ery;
             double r = p + rele;
-            setMtPower(x+r, x-r, y+r, y-r);
+            setMtPower( -(x-r),  -(y+r),  -(y-r),  -(x+r));
+            delay(500);
         }
         setMtZero();
-    }
+    } // регулятор для проезда по координатам
 
 
     public void rotate(double degrees) {
 
-        double ERROR = 4;
+        double ERROR = 1;
         double Er0 = -degrees;
         double errorFix=0;
         double pw = 1;
-        double kr = 0.3;
+        double kr = 0.07;
         double ErLast = 0;
 
-        while (Math.abs(ERROR)>3 && linearOpMode.opModeIsActive()) {
+        while (Math.abs(ERROR)>0.01 && linearOpMode.opModeIsActive()) {
             ERROR  = degrees - getAngle();
 
-            double kp = 0.6;
-            double P = kp * ERROR / Er0 * pw; // P = -0.4
+            double kp = -0.5257;
+            double P = kp * ERROR / (Er0); // P = -0.4
 
             double kd = 0.2;
             double ErD = ERROR - ErLast;
-            //double D = kd * ErD * (1/ERROR);
+            double D = kd * ErD * (1/ERROR);
 
             //  if (Math.signum(D) > Math.signum(P)) {  D=P; }
 
             double RELE = kr * Math.signum(ERROR);
-            ErLast = ERROR;
+            ErLast = ERROR; 
 
             double pwf = RELE + P;
             setMtPower(pwf, pwf, -pwf, -pwf);
 
-            telemetry.addData("ERROR", ERROR); // хитрые проделки помидора The_IL_а
+            telemetry.addData("ERROR", ERROR);
             telemetry.addData("degrees", degrees);
             telemetry.addData("getAngle", getAngle());
             telemetry.addData("RELE", RELE);
@@ -334,16 +347,17 @@ public class Robot2023 extends Robot {
 
         }
         setMtPower(0, 0, 0, 0);
-    }
+    } // регулятор для поворот
 
-    public  void go(double cm) { //
+    public  void go(double cm) {
+        setMtAllDelay(-1, 100);
         double pw = 1;
         double degrees = 0;
-        double err = 0;
-        double cc = (1450 * cm) / (9.5 * Math.PI);
+        double err = 5;
+        double cc = (1440 * (cm*0.394)) / (9.5 * Math.PI);
         double Er0 = cc;
         double Erd = -degrees;
-        double kg = 0.15;
+        double kg = 0.1;
         double errorFix=0;
         double ErLast = 0;
         double ErLast2 = 0;
@@ -355,10 +369,10 @@ public class Robot2023 extends Robot {
         LB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        err = -getAngle();
+        err = degrees-getAngle()+0.00125;
         double p = kg * err / Erd * pw;
-        double rele = kr * Math.signum(err);
-        double dr = p + rele;
+        double rele = (kr+0.015) * Math.signum(err);
+        double dr = p + -rele;
 
         /*if (degrees < -180) {
             degrees += 360;
@@ -370,13 +384,13 @@ public class Robot2023 extends Robot {
         }*/
         double D = 1;
         double D2 = 1;
-        //while (LB.getCurrentPosition() < m) { setMtPower(-pw, -pw, pw, pw); }
+       // while (LB.getCurrentPosition() < m) { setMtPower(-pw, -pw, pw, pw); }
         while ( ( Math.abs(D) > 0.1 ||  Math.abs(cc) - Math.abs(LF.getCurrentPosition()) > 10*Math.signum(cc)) && ( Math.abs(D) > 0.1 ||  Math.abs(cc) - Math.abs(RF.getCurrentPosition()) > 10*Math.signum(cc)) && linearOpMode.opModeIsActive()) {
 
-            double Er = Math.abs(cc) - Math.abs(LF.getCurrentPosition());
-            double Er2 = Math.abs(cc) - Math.abs(RF.getCurrentPosition());
+            double Er = cc - LF.getCurrentPosition();
+            double Er2 = cc - RF.getCurrentPosition();
 
-            double kp = 0.9;
+            double kp = 0.5;
             double P = kp * Er / Er0 * pw;
             double P2 = kp * Er2 / Er0 * pw;
 
@@ -410,13 +424,13 @@ public class Robot2023 extends Robot {
             //telemetry.addData("D", D);
             //telemetry.update();
 
-            LF.setPower(-pwf+dr);
-            RB.setPower(-pwf+dr);
-            RF.setPower(-pwf2+dr);
-            LB.setPower(-pwf2+dr);
+            LF.setPower(pwf+dr);
+            RB.setPower(pwf+dr);
+            RF.setPower(pwf2+dr);
+            LB.setPower(pwf2+dr);
 
 
-            /*telemetry.addData("cc", cc);
+            telemetry.addData("cc", cc);
             telemetry.addData("Er0", Er0);
             telemetry.addData("Er", Er);
             telemetry.addData("getCurrentPosition", LB.getCurrentPosition());
@@ -425,7 +439,14 @@ public class Robot2023 extends Robot {
             telemetry.addData("D", D);
             telemetry.addData("pw", pw);
             telemetry.addData("pwf", pwf);
-            telemetry.update();*/
+            telemetry.addData("dr", dr);
+            telemetry.addData("pwf2", pwf2);
+            telemetry.addData("p",  p);
+            telemetry.addData("rele", rele);
+            telemetry.addData("err", err);
+            telemetry.addData("erd", Erd);
+            telemetry.addData("poweerlf", LF.getPower());
+            telemetry.update();
 
         }
 
@@ -435,12 +456,9 @@ public class Robot2023 extends Robot {
         RF.setPower(0);
 
         delay(500);
-    }
+    } // езда по экнодерам с удержанием угла
 
-    public void liftOff() {
-        UP1.setPower(0);
-        UP2.setPower(0);
-    }
+
 
     OpenCvWebcam webcam;
 

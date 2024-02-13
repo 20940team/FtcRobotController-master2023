@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.concurrent.Delayed;
+
 @Autonomous(name="at", group="")
 public class xxy extends LinearOpMode {
 
@@ -16,10 +17,11 @@ public class xxy extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Robot2023 R = new Robot2023(hardwareMap, telemetry, this);
         R.init();
-
         waitForStart();
+        R.rotate(-90);
+        R.delay(5000);
 
-        R.go(20);
+
 
     }
 }

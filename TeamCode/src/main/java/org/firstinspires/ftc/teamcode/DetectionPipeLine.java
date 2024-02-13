@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.opencv.core.Core.max;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -37,7 +40,7 @@ public class DetectionPipeLine extends OpenCvPipeline {
     public String targetColor = "BLUE";
     int targetChannelId = 2;
 
-    public resultPosition result = resultPosition.RIGHT;
+    public resultPosition result = resultPosition.RIGHT  ;
 
     public void initFixed(Telemetry telemetry_) {
         telemetry = telemetry_;
@@ -85,14 +88,14 @@ public class DetectionPipeLine extends OpenCvPipeline {
         double avg2 = (double) Core.mean(rg2).val[0];
         double avg3 = (double) Core.mean(rg3).val[0];
 
-        telemetry.addData("avg1", avg1);
-        telemetry.addData("avg2", avg2);
-        telemetry.addData("avg3", avg3);
+      //  telemetry.addData("avg1", avg1);
+      //  telemetry.addData("avg2", avg2);
+      //  telemetry.addData("avg3", avg3);
 
         double wires = (double) Math.max(avg1, avg2);
         double max = (double) Math.max(wires, avg3);
 
-        telemetry.addData("max", max);
+      //  telemetry.addData("max", max);
 
         if (max == avg1) {
             result = resultPosition.LEFT;
@@ -102,10 +105,11 @@ public class DetectionPipeLine extends OpenCvPipeline {
             result = resultPosition.RIGHT;
         }
 
-        telemetry.addData("result", result);
-        telemetry.update();
+     //   telemetry.addData("result", result);
+     //   telemetry.update();
 
-        return input;
+
+            return input;
     }
 
     public resultPosition getResult() {

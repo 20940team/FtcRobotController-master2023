@@ -10,7 +10,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@Autonomous(name="cc", group="")
+@Autonomous(name="nevkluchaite test", group="")
 public class mme extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

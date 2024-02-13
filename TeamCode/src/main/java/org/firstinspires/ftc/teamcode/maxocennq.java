@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
-
 @Autonomous(name="автоном по камере синий ", group="")
 public class maxocennq extends LinearOpMode {
     @Override
@@ -34,36 +34,49 @@ public class maxocennq extends LinearOpMode {
 
             }
         });
-
+        boolean zonedetected = false;
         DetectionPipeLine.resultPosition result = pipeLine.getResult();
         while (!isStarted() && !isStopRequested()) {
+            result = pipeLine.getResult();
             telemetry.addData("result", pipeLine.getResult());
+            telemetry.update();
             R.delay(500);
         }
 
         //123 test staring now
 
-          if (result == DetectionPipeLine.resultPosition.LEFT) {
-            telemetry.addData("Going to the left zone! ","1");
 
-              R.go(55);
-              R.rotate(-90);
-              R.go(15);
-              R.azaxvat(500, -1);
+        if (result == DetectionPipeLine.resultPosition.LEFT && zonedetected == false) {
+            zonedetected = true;
+            telemetry.addData("Going to the left zone! ", "1");
+            telemetry.update();
+            R.delay(1000);
+            R.go(80);
+            R.rotate(90);
+            R.go(15);
+            R.azaxvat(1000, -1);
+            R.go(-25);
 
-        } else if (result == DetectionPipeLine.resultPosition.CENTER) {
-            telemetry.addData("Going to the center zone! ","2");
+        } else if (result == DetectionPipeLine.resultPosition.CENTER && zonedetected == false) {
+            zonedetected = true;
+            telemetry.addData("Going to the center zone! ", "2");
+            telemetry.update();
+            R.delay(1000);
+            R.go(95);
+            R.azaxvat(1000, -1);
+            R.go(-20);
 
-            R.go(70);
-            R.azaxvat(500, -1);
+        } else if (result == DetectionPipeLine.resultPosition.RIGHT && zonedetected == false) {
+            zonedetected = true;
+            telemetry.addData("Going to the right zone! ", "3");
+            telemetry.update();
+            R.delay(1000);
+            R.go(80);
+            R.rotate(-90);
+            R.go(15);
+            R.azaxvat(100, -1);
+            R.go(-25);
 
-        } else if (result == DetectionPipeLine.resultPosition.RIGHT) {
-            telemetry.addData("Going to the right zone! ","3");
-
-              R.go(55);
-              R.rotate(90);
-              R.go(15);
-              R.azaxvat(500, -1);
         }
 
 

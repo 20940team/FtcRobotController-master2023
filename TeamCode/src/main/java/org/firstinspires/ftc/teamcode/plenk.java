@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.concurrent.Delayed;
-
 @Autonomous(name="dt", group="")
 public class plenk extends LinearOpMode {
 
@@ -20,9 +19,10 @@ public class plenk extends LinearOpMode {
         R.init();
 
         waitForStart();
+        R.setMtAll(1);
+        R.delay(2000);
+        R.setMtZero();
 
-        R.go(15);
-        R.rotate(90);
 
 
     }

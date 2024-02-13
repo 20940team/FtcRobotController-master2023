@@ -35,36 +35,53 @@ public class fi extends LinearOpMode {
             }
         });
 
-        double subresult = 0;
+        boolean zonedetected = false;
         DetectionPipeLine.resultPosition result = pipeLine.getResult();
         while (!isStarted() && !isStopRequested()) {
+           result = pipeLine.getResult();
             telemetry.addData("result", pipeLine.getResult());
+            telemetry.addData("aaaaaaaaaaaaaa", 1);
+            telemetry.update();
             R.delay(500);
         }
 
         //123 test staring now
 
-        if (result == DetectionPipeLine.resultPosition.LEFT) {
-            telemetry.addData("Going to the left zone! ","1");
-            subresult = 1;
-            R.go(55);
-            R.rotate(-90);
-            R.azaxvat(500, -1);
-            R.go(15);
 
-        } else if (result == DetectionPipeLine.resultPosition.CENTER) {
-            telemetry.addData("Going to the center zone! ","2");
-            subresult = 2;
-            R.go(70);
-            R.azaxvat(500, -1);
 
-        } else if (result == DetectionPipeLine.resultPosition.RIGHT) {
-            telemetry.addData("Going to the right zone! ","3");
-            subresult = 3;
-            R.go(55);
+        if (result == DetectionPipeLine.resultPosition.LEFT && zonedetected == false) {
+            zonedetected = true;
+            telemetry.addData("Going to the left zone! ", "1");
+            telemetry.update();
+            R.delay(1000);
+            R.go(80);
             R.rotate(90);
-            R.azaxvat(500, -1);
             R.go(15);
+            R.azaxvat(1000, -1);
+            R.go(-15);
+            R.rotate(0);
+            R.go(-25);
+
+        } else if (result == DetectionPipeLine.resultPosition.CENTER && zonedetected == false) {
+            zonedetected = true;
+            telemetry.addData("Going to the center zone! ", "2");
+            telemetry.update();
+            R.delay(1000);
+            R.go(95);
+            R.go(-20);
+
+        } else if (result == DetectionPipeLine.resultPosition.RIGHT && zonedetected == false) {
+            zonedetected = true;
+            telemetry.addData("Going to the right zone! ", "3");
+            telemetry.update();
+            R.delay(1000);
+            R.go(80);
+            R.rotate(-90);
+            R.go(15);
+            R.azaxvat(100, -1);
+            R.go(-15);
+            R.rotate(0);
+            R.go(-25);
 
         }
 
