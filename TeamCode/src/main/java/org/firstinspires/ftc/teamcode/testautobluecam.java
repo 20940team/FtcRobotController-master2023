@@ -2,16 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
 
 @Autonomous(name="nevkluchaite test", group="")
-public class mme extends LinearOpMode {
+public class testautobluecam extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Robot2023 R = new Robot2023(hardwareMap, telemetry, this);
